@@ -46,8 +46,11 @@ class MoscowMapParser
     {
         $document = $this->generalDocument;
         $counter = $document->find("span.counter");
-        //todo
-        return $counter;
+        //todo get string counter tag value
+        $strLen = strlen($counter);
+        $counter = substr($counter, $strLen/2);
+        $count = preg_replace("/[^0-9]/", '', $counter);
+        return $count;
     }
 
     public function pager()
@@ -81,6 +84,10 @@ class MoscowMapParser
 
     }
 
+    /**
+     * @param $url
+     * @return \phpQueryObject|\QueryTemplatesParse|\QueryTemplatesSource|\QueryTemplatesSourceQuery
+     */
     private function getPhpQueryDoc($url)
     {
         $res = $this->client->request('GET', $url);
