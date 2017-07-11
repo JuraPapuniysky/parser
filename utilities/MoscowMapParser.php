@@ -57,7 +57,7 @@ class MoscowMapParser
                 $this->linker();
             }else{
                 $link = $this->link."page$i/";
-                $this->generalDocument = $this->getPhpQueryDoc($this->link);
+                $this->generalDocument = $this->getPhpQueryDoc($link);
                 $this->linker();
             }
         }
