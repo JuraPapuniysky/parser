@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\LinkForm;
 use app\utilities\MoscowMapParser;
+use GuzzleHttp\Client;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -64,20 +65,21 @@ class SiteController extends Controller
     public function actionIndex()
     {
         $model = new LinkForm();
-        if (Yii::$app->request->post()){
-
-
+        $client = new Client();
+        if (Yii::$app->request->post()) {
             if ($model->load(Yii::$app->request->post())) {
                 if ($model->validate()) {
-                    Yii::createObject(MoscowMapParser::class, [$model->link]);
-                    return;
+                    $parser = Yii::createObject(MoscowMapParser::class, [$model->link, $client]);
+                   // return $this->render('index', [
+                //        'model' => $model,
+                //        'listPage' => $parser->listPage,
+                //    ]);
                 }
             }
-
             return $this->render('index', [
                 'model' => $model,
             ]);
-        }else{
+        } else {
             return $this->render('index', [
                 'model' => $model,
             ]);

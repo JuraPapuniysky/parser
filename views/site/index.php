@@ -13,5 +13,9 @@ $this->title = 'My Yii Application';
             'model' => $model,
         ]) ?>
 
+    <?php if(isset($listPage)){
+        echo $listPage;
+        } ?>
+
     </div>
 </div>
