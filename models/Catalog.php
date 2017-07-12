@@ -15,6 +15,7 @@ use Yii;
  * @property string $address
  * @property string $comment
  * @property string $link
+ * @property string $site
  */
 class Catalog extends \yii\db\ActiveRecord
 {
@@ -32,7 +33,7 @@ class Catalog extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'contact', 'email', 'activity', 'address', 'comment', 'link'], 'string'],
+            [['name', 'contact', 'email', 'activity', 'address', 'comment', 'link', 'site'], 'string'],
         ];
     }
 
@@ -49,7 +50,8 @@ class Catalog extends \yii\db\ActiveRecord
             'activity' => 'Activity',
             'address' => 'Address',
             'comment' => 'Comment',
-            'link' => 'Link'
+            'link' => 'Link',
+            'site' => 'Site',
         ];
     }
 }

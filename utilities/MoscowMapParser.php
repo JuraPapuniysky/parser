@@ -59,7 +59,7 @@ class MoscowMapParser
     public function pager()
     {
         for ($i = 1; $i <= $this->countPage; $i++) {
-            if ($i = 1) {
+            if ($i == 1) {
                 $this->linker();
             } else {
                 $link = $this->link . "page$i/";
@@ -90,6 +90,8 @@ class MoscowMapParser
         $catalog->activity = $this->getActivity($info);
         $catalog->address = $this->getAddress($info);
         $catalog->comment = $this->getComment($info);
+        $catalog->site = $this->getSite($info);
+        $catalog->link = $href;
         $catalog->save();
     }
 
@@ -113,7 +115,7 @@ class MoscowMapParser
     private function getName($document)
     {
         $content = $document->find("h1.subtitle-index.htag.th3.black");
-        $pieces = explode(':', $content[0]->textContent);
+        $pieces = explode(':', $content->elements[0]->textContent);
         return $pieces[0];
     }
 
@@ -125,17 +127,29 @@ class MoscowMapParser
     {
         $content = $info->find("p.as-span.m-left");
         $phone = '';
+        $secondPhone = '';
         $tmp = '';
         foreach ($content as $item) {
             $item = pq($item);
-            $tmp = preg_replace('^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$', '', $item->textContent);
-            if($tmp != ''){
-                $phone = $tmp;
+            $text = $item->elements[0]->textContent;
+            if (strlen($text) > 0){
+                if ($text[0] == '+'){
+                    $phone = $text;
+                }
             }
         }
         $secondContent = $info->find("p.as-span.box");
-        $secondPhone = preg_replace('^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$', '', $secondContent[0]->textContent);
-        return $phone.$secondPhone;
+        if(count($secondContent->elements) > 0){
+            $secondPhone = $secondContent->elements[0]->textContent;
+        }
+        if(strlen($secondPhone) > 0) {
+            if ($secondPhone[0] != '+') {
+                $secondPhone = '';
+            }
+        }else{
+            $secondPhone = '';
+        }
+        return $phone.' '.$secondPhone;
 
     }
 
@@ -146,7 +160,13 @@ class MoscowMapParser
     private function getEmail($info)
     {
         $content = $info->find("a.black.nou");
-        return $content[0]->textContent;
+        $email = '';
+        foreach ($content->elements as $element){
+            if (stristr($element->textContent, '@')){
+                $email = $element->textContent;
+            }
+        }
+        return $email;
     }
 
     /**
@@ -156,7 +176,7 @@ class MoscowMapParser
     private function  getActivity($info)
     {
         $content = $info->find("a.black.nou");
-        return $content[1]->textContent;
+        return '';
     }
 
     /**
@@ -166,7 +186,12 @@ class MoscowMapParser
     private function getAddress($info)
     {
         $content = $info->find("p.as-span.m-left");
-        return $content[0]->textContent;
+        if(count($content->elements) > 0){
+            return $content->elements[0]->textContent;
+        }else{
+            return '';
+        }
+
     }
 
     /**
@@ -184,8 +209,16 @@ class MoscowMapParser
      */
     private function getSite($info)
     {
+        $site = '';
         $content = $info->find("a.as.black.nou");
-        return $content[1]->textContent;
+        foreach ($content->elements as $element){
+            if (strlen($element->textContent) > 0){
+                if($element->textContent[0] == 'w'){
+                    $site = $element->textContent;
+                }
+            }
+        }
+        return $site;
     }
 
 }

@@ -36,6 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'address:ntext',
             'comment:ntext',
             'link:ntext',
+            'site:ntext',
         ],
     ]) ?>
 
