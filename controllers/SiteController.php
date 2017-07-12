@@ -70,6 +70,7 @@ class SiteController extends Controller
             if ($model->load(Yii::$app->request->post())) {
                 if ($model->validate()) {
                     $parser = Yii::createObject(MoscowMapParser::class, [$model->link, $client]);
+                    $parser->pager();
                    // return $this->render('index', [
                 //        'model' => $model,
                 //        'listPage' => $parser->listPage,
