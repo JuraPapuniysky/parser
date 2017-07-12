@@ -23,7 +23,7 @@ class MoscowMapParser
         $this->link = $link;
        // $this->listPage = $this->listPage();
         $this->generalDocument = $this->getPhpQueryDoc($this->link);
-        $this->countPage;
+        $this->countPage = $this->countPage();
     }
 
     /**
@@ -46,10 +46,8 @@ class MoscowMapParser
     {
         $document = $this->generalDocument;
         $counter = $document->find("span.counter");
-        //todo get string counter tag value
-        $strLen = strlen($counter);
-        $counter = substr($counter, $strLen/2);
-        $count = preg_replace("/[^0-9]/", '', $counter);
+        $element = $counter->elements[0]->textContent;
+        $count = preg_replace("/[^0-9]/", '', substr($element, strlen($element)/2));
         return $count;
     }
 
@@ -91,7 +89,7 @@ class MoscowMapParser
     private function getPhpQueryDoc($url)
     {
         $res = $this->client->request('GET', $url);
-        usleep(2000);
+       // usleep(2000);
         $body = $res->getBody();
         return \phpQuery::newDocumentHTML($body);
     }
