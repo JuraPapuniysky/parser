@@ -107,6 +107,25 @@ class CatalogController extends Controller
     }
 
     /**
+     *
+     */
+    public function actionExportExcel()
+    {
+        $file = \Yii::createObject([
+            'class' => 'codemix\excelexport\ExcelFile',
+            'sheets' => [
+                'Users' => [
+                    'class' => 'codemix\excelexport\ActiveExcelSheet',
+                    'query' => Catalog::find(),
+                ]
+            ]
+        ]);
+        $file->send('catalog.xls');
+
+        return $this->redirect(['index']);
+    }
+
+    /**
      * Finds the Catalog model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id

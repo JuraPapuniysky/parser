@@ -18,6 +18,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('Create Catalog', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
+    <p>
+        <?= Html::a('Export Excel', ['export-excel'], ['class' => 'btn btn-default']) ?>
+    </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -29,10 +32,15 @@ $this->params['breadcrumbs'][] = $this->title;
             'contact:ntext',
             'email:ntext',
             'activity:ntext',
+            'site:ntext',
+            'link:ntext',
             // 'address:ntext',
             // 'comment:ntext',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
+
+
+
 </div>
