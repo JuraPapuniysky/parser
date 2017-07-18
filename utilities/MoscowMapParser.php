@@ -6,23 +6,15 @@ namespace app\utilities;
 use app\models\Catalog;
 use GuzzleHttp\Client;
 
-class MoscowMapParser
+class MoscowMapParser extends Site
 {
     const SITE_URL = 'https://www.moscowmap.ru';
     const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.116 Safari/537.36';
 
-    private $client;
-    private $link;
-    private $generalDocument;
-    private $countPage;
-    private $listPages;
-
 
     public function __construct($link, Client $client)
     {
-        $this->client = $client;
-        $this->link = $link;
-        $this->generalDocument = $this->getPhpQueryDoc($this->link);
+        parent::__construct($link, $client);
         $this->countPage = $this->countPage();
     }
 
@@ -82,7 +74,7 @@ class MoscowMapParser
     private function page($href)
     {
         $document = $this->getPhpQueryDoc($href);
-        $info  = $document->find("div.fs14.text-wrapper.alterview.main-info");
+        $info = $document->find("div.fs14.text-wrapper.alterview.main-info");
         $catalog = new Catalog();
         $catalog->name = $this->getName($document);
         $catalog->contact = $this->getContact($info);
@@ -96,21 +88,9 @@ class MoscowMapParser
         echo "New item was add with name $catalog->name \n";
     }
 
-    /**
-     * @param $url
-     * @return \phpQueryObject|\QueryTemplatesParse|\QueryTemplatesSource|\QueryTemplatesSourceQuery
-     */
-    private function getPhpQueryDoc($url)
-    {
-        $res = $this->client->request('GET', $url);
-        usleep(1000);
-        $body = $res->getBody();
-        return \phpQuery::newDocumentHTML($body);
-    }
-
 
     /**
-     * @param $info
+     * @param $document
      * @return mixed
      */
     private function getName($document)
@@ -133,24 +113,24 @@ class MoscowMapParser
         foreach ($content as $item) {
             $item = pq($item);
             $text = $item->elements[0]->textContent;
-            if (strlen($text) > 0){
-                if ($text[0] == '+'){
+            if (strlen($text) > 0) {
+                if ($text[0] == '+') {
                     $phone = $text;
                 }
             }
         }
         $secondContent = $info->find("p.as-span.box");
-        if(count($secondContent->elements) > 0){
+        if (count($secondContent->elements) > 0) {
             $secondPhone = $secondContent->elements[0]->textContent;
         }
-        if(strlen($secondPhone) > 0) {
+        if (strlen($secondPhone) > 0) {
             if ($secondPhone[0] != '+') {
                 $secondPhone = '';
             }
-        }else{
+        } else {
             $secondPhone = '';
         }
-        return $phone.' '.$secondPhone;
+        return $phone . ' ' . $secondPhone;
 
     }
 
@@ -162,8 +142,8 @@ class MoscowMapParser
     {
         $content = $info->find("a.black.nou");
         $email = '';
-        foreach ($content->elements as $element){
-            if (stristr($element->textContent, '@')){
+        foreach ($content->elements as $element) {
+            if (stristr($element->textContent, '@')) {
                 $email = $element->textContent;
             }
         }
@@ -174,7 +154,7 @@ class MoscowMapParser
      * @param $info
      * @return mixed
      */
-    private function  getActivity($info)
+    private function getActivity($info)
     {
         $content = $info->find("a.black.nou");
         return '';
@@ -187,9 +167,9 @@ class MoscowMapParser
     private function getAddress($info)
     {
         $content = $info->find("p.as-span.m-left");
-        if(count($content->elements) > 0){
+        if (count($content->elements) > 0) {
             return $content->elements[0]->textContent;
-        }else{
+        } else {
             return '';
         }
 
@@ -201,7 +181,7 @@ class MoscowMapParser
      */
     private function getComment($info)
     {
-       return null;
+        return null;
     }
 
     /**
@@ -212,9 +192,9 @@ class MoscowMapParser
     {
         $site = '';
         $content = $info->find("a.as.black.nou");
-        foreach ($content->elements as $element){
-            if (strlen($element->textContent) > 0){
-                if($element->textContent[0] == 'w'){
+        foreach ($content->elements as $element) {
+            if (strlen($element->textContent) > 0) {
+                if ($element->textContent[0] == 'w') {
                     $site = $element->textContent;
                 }
             }
