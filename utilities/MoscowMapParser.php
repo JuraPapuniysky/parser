@@ -93,6 +93,7 @@ class MoscowMapParser
         $catalog->site = $this->getSite($info);
         $catalog->link = $href;
         $catalog->save();
+        echo "New item was add with name $catalog->name \n";
     }
 
     /**
