@@ -11,10 +11,13 @@ class MoscowMapParser extends Site
     const SITE_URL = 'https://www.moscowmap.ru';
     const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.116 Safari/537.36';
 
-
-    public function __construct($link, Client $client)
+    private $count;
+    private $pageNum;
+    public function __construct($link, Client $client, $pageNum, $count)
     {
         parent::__construct($link, $client);
+        $this->count = $count;
+        $this->pageNum = $pageNum;
         $this->countPage = $this->countPage();
     }
 
@@ -50,11 +53,13 @@ class MoscowMapParser extends Site
      */
     public function pager()
     {
-        for ($i = 1; $i <= $this->countPage; $i++) {
+        for ($i = $this->pageNum; $i <= $this->countPage; $i++) {
             if ($i == 1) {
                 $this->linker();
             } else {
+
                 $link = $this->link . "page$i/";
+                $this->pageNum = $i;
                 $this->generalDocument = $this->getPhpQueryDoc($link);
                 $this->linker();
             }
@@ -68,6 +73,7 @@ class MoscowMapParser extends Site
     {
         foreach ($this->listPages() as $listPage) {
             $this->page($listPage);
+
         }
     }
 
@@ -85,7 +91,10 @@ class MoscowMapParser extends Site
         $catalog->site = $this->getSite($info);
         $catalog->link = $href;
         $catalog->save();
-        echo "New item was add with name $catalog->name \n";
+        echo "$this->count. Page # $this->pageNum. New item name $catalog->name \n with site $catalog->site \n";
+        unset($catalog);
+        $this->count++;
+        sleep(1);
     }
 
 

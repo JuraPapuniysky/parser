@@ -18,10 +18,10 @@ class ParserController extends Controller
         echo 'It works!';
     }
 
-    public function actionMoscowMap($link = '')
+    public function actionMoscowMap($link = '', $pageNum = 1, $count = 1)
     {
         $client = new Client();
-        $parser = Yii::createObject(MoscowMapParser::class, [$link, $client]);
+        $parser = Yii::createObject(MoscowMapParser::class, [$link, $client, $pageNum, $count]);
         $parser->pager();
     }
 

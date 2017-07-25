@@ -26,8 +26,8 @@ abstract class Site
      */
     protected function getPhpQueryDoc($url)
     {
+        echo "URL is $url \n";
         $res = $this->client->request('GET', $url);
-        usleep(1000);
         $body = $res->getBody();
         return \phpQuery::newDocumentHTML($body);
     }
