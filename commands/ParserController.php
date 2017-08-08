@@ -31,4 +31,9 @@ class ParserController extends Controller
         $parser = Yii::createObject(Metaprom::class, [$link, $client]);
         $parser->saveCompany('http://www.metaprom.ru/companies/id579042-oborudovanie-tehnologii-ooo');
     }
+
+    public function actionUcheba($link = 'https://www.ucheba.ru/for-abiturients/college')
+    {
+        $client = new Client();
+    }
 }

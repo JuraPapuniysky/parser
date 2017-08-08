@@ -94,7 +94,7 @@ class MoscowMapParser extends Site
         echo "$this->count. Page # $this->pageNum. New item name $catalog->name \n with site $catalog->site \n";
         unset($catalog);
         $this->count++;
-        sleep(1);
+        usleep(500000);
     }
 
 
@@ -165,8 +165,8 @@ class MoscowMapParser extends Site
      */
     private function getActivity($info)
     {
-        $content = $info->find("a.black.nou");
-        return '';
+        $content = $info->find("p#about1");
+        return $content->elements[0]->textContent;
     }
 
     /**
