@@ -5,6 +5,8 @@ namespace app\utilities;
 
 use app\models\Catalog;
 use GuzzleHttp\Client;
+use PHPUnit\Framework\Exception;
+use yii\base\ErrorException;
 
 class MoscowMapParser extends Site
 {
@@ -166,7 +168,13 @@ class MoscowMapParser extends Site
     private function getActivity($info)
     {
         $content = $info->find("p#about1");
-        return $content->elements[0]->textContent;
+        try{
+            $content = $content->elements[0]->textContent;
+        }catch (ErrorException $e){
+            echo "No activity \n";
+            $content = '';
+        }
+        return $content;
     }
 
     /**

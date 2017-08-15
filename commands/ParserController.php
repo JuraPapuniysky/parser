@@ -5,6 +5,8 @@ namespace app\commands;
 
 
 use app\utilities\Metaprom;
+use app\utilities\MosgorzdravParcer;
+use app\utilities\Ucheba;
 use Yii;
 use GuzzleHttp\Client;
 use yii\console\Controller;
@@ -32,8 +34,17 @@ class ParserController extends Controller
         $parser->saveCompany('http://www.metaprom.ru/companies/id579042-oborudovanie-tehnologii-ooo');
     }
 
-    public function actionUcheba($link = 'https://www.ucheba.ru/for-abiturients/college')
+    public function actionUcheba($link = 'https://www.ucheba.ru/for-abiturients/college', $countPage = 9)
     {
         $client = new Client();
+        $parser = Yii::createObject(Ucheba::class, [$link, $client, $countPage]);
+        $parser->pager();
+    }
+
+    public function actionMosgorzdrav($link)
+    {
+        $client = new Client();
+        $parser = Yii::createObject(MosgorzdravParcer::class, [$link, $client]);
+        $parser->parser();
     }
 }
