@@ -5,6 +5,7 @@ namespace app\commands;
 
 
 use app\utilities\Metaprom;
+use app\utilities\Mos;
 use app\utilities\MosgorzdravParcer;
 use app\utilities\Ucheba;
 use Yii;
@@ -46,5 +47,12 @@ class ParserController extends Controller
         $client = new Client();
         $parser = Yii::createObject(MosgorzdravParcer::class, [$link, $client]);
         $parser->parser();
+    }
+
+    public function actionMos($link)
+    {
+        $client = new Client();
+        $parser = Yii::createObject(Mos::class, [$link, $client]);
+        $parser->getItems();
     }
 }
