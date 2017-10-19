@@ -77,7 +77,10 @@ class DoubleSeven extends Site
         $catalog->contact = $phone;
         $catalog->email = $email;
         $catalog->address = "$city, $address";
-        $catalog->save();
+        $catalog->link = $link;
+        if ($catalog->save()){
+            echo "New company $catalog->name was saved id=$catalog->id \n";
+        }
     }
 }
 
