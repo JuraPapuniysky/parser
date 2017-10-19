@@ -4,6 +4,7 @@
 namespace app\commands;
 
 
+use app\utilities\DoubleSeven;
 use app\utilities\Metaprom;
 use app\utilities\Mos;
 use app\utilities\MosgorzdravParcer;
@@ -54,5 +55,13 @@ class ParserController extends Controller
         $client = new Client();
         $parser = Yii::createObject(Mos::class, [$link, $client]);
         $parser->getItems();
+    }
+
+    public function actionDoubleSeven($link)
+    {
+        $client = new Client();
+        $parser = Yii::createObject(DoubleSeven::class, [$link, $client]);
+        $parser->parser();
+
     }
 }
