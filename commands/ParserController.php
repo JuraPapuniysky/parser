@@ -8,6 +8,7 @@ use app\utilities\DoubleSeven;
 use app\utilities\Metaprom;
 use app\utilities\Mos;
 use app\utilities\MosgorzdravParcer;
+use app\utilities\Orgpoisk;
 use app\utilities\Ucheba;
 use Yii;
 use GuzzleHttp\Client;
@@ -63,5 +64,15 @@ class ParserController extends Controller
         $parser = Yii::createObject(DoubleSeven::class, [$link, $client]);
         $parser->parser();
 
+    }
+
+    /**
+     * orgpoisk.ru
+     */
+    public function actionOrgpoisk($link, $countList)
+    {
+        $client = new Client();
+        $orgpoisk = Yii::createObject(Orgpoisk::class, [$link, $countList, $client]);
+        $orgpoisk->parser();
     }
 }
