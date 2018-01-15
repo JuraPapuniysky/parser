@@ -3,8 +3,10 @@
 
 namespace app\utilities;
 
+use app\models\BadLinks;
 use app\models\Catalog;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ServerException;
 use PHPUnit\Framework\Exception;
 use yii\base\ErrorException;
 
@@ -81,7 +83,15 @@ class MoscowMapParser extends Site
 
     private function page($href)
     {
-        $document = $this->getPhpQueryDoc($href);
+        try{
+            $document = $this->getPhpQueryDoc($href);
+        }catch(ServerException $e){
+            sleep(10);
+            $badLink = new BadLinks();
+            $badLink->link = $href;
+            $badLink->save();
+        }
+        
         $info = $document->find("div.fs14.text-wrapper.alterview.main-info");
         $catalog = new Catalog();
         $catalog->name = $this->getName($document);
@@ -208,13 +218,18 @@ class MoscowMapParser extends Site
     private function getSite($info)
     {
         $site = '';
-        $content = $info->find("a.as.black.nou");
-        foreach ($content->elements as $element) {
-            if (strlen($element->textContent) > 0) {
-                if ($element->textContent[0] == 'w') {
-                    $site = $element->textContent;
-                }
-            }
+        $content = $info->find("span.asu");
+        //foreach ($content->elements as $element) {
+        //    if (strlen($element->textContent) > 0) {
+        //        if ($element->textContent[0] == 'w') {
+        //            $site = $element->textContent;
+        //        }
+         //   }
+       // }
+        try{
+            $site = $content->elements[0]->textContent;
+        }catch(ErrorException $e){
+            $site = '';
         }
         return $site;
     }

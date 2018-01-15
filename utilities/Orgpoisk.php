@@ -57,7 +57,17 @@ class Orgpoisk extends Site
         $document = $this->getPhpQueryDoc($link);
         $catalog->name = $document->find("h1")->text();
         $catalog->address = $this->getAddress($document);
+        $catalog->link = $link;
+        $catalog->email = '';
+        $catalog->site = $this->getSite($document);
+        $catalog->contact = $this->getContact($document);
+        echo $catalog->name."\n";
         echo $catalog->address."\n";
+        echo $catalog->link."\n";
+        echo $catalog->site."\n";
+        echo $catalog->contact."\n";
+        echo "////////////////\n";
+        $catalog->save();
     }
 
     /**
@@ -76,5 +86,40 @@ class Orgpoisk extends Site
             }
         }
         return $name;
+    }
+
+    /**
+     * @param \phpQueryObject $document
+     * @return array|null|\phpQueryObject|string
+     */
+    protected function getSite(\phpQueryObject $document)
+    {
+        $as = $document->find('a');
+        $site = '';
+        foreach ($as as $a){
+            $pq = pq($a);
+            if($pq->attr('target') === '_BLANK'){
+                $site = $pq->attr('href');
+                break;
+            }
+        }
+        return $site;
+    }
+
+    /**
+     * @param \phpQueryObject $document
+     * @return String
+     */
+    protected function getContact(\phpQueryObject $document)
+    {
+        $contact = '';
+        foreach ($document->find('p') as $p){
+            $pq = pq($p);
+            if (strpos($pq->text(), '(495)') !== false or strpos($pq->text(), 'Тел.') !== false or strpos($pq->text(), 'Телефон') !== false){
+                $contact = $pq->text();
+                break;
+            }
+        }
+        return $contact;
     }
 }

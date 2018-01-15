@@ -5,6 +5,7 @@ namespace app\commands;
 
 
 use app\utilities\DoubleSeven;
+use app\utilities\InfoSpravki;
 use app\utilities\Metaprom;
 use app\utilities\Mos;
 use app\utilities\MosgorzdravParcer;
@@ -73,6 +74,16 @@ class ParserController extends Controller
     {
         $client = new Client();
         $orgpoisk = Yii::createObject(Orgpoisk::class, [$link, $countList, $client]);
+        $orgpoisk->parser();
+    }
+
+    /**
+     * http://moscva.info-spravki.ru
+     */
+    public function actionInfoSpravky($link)
+    {
+        $client = new Client();
+        $orgpoisk = Yii::createObject(InfoSpravki::class, [$link, $client]);
         $orgpoisk->parser();
     }
 }
