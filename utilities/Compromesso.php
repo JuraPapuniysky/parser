@@ -39,6 +39,6 @@ class Compromesso extends Site
     public function getOrganizations(\phpQueryObject $page)
     {
         $items = $page->find('div.hotel-name');
-        return $items;
+
     }
 }
