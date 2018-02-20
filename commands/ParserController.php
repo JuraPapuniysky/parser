@@ -11,6 +11,8 @@ use app\utilities\Mos;
 use app\utilities\MosgorzdravParcer;
 use app\utilities\Orgpoisk;
 use app\utilities\Ucheba;
+use app\utilities\Compromesso;
+use Codeception\Module\Cli;
 use Yii;
 use GuzzleHttp\Client;
 use yii\console\Controller;
@@ -85,5 +87,16 @@ class ParserController extends Controller
         $client = new Client();
         $orgpoisk = Yii::createObject(InfoSpravki::class, [$link, $client]);
         $orgpoisk->parser();
+    }
+
+    /**
+     * http://moskva.compromesso.ru/catalog/obuvnye-magaziny/
+     */
+    public function actionCompromesso($link, $pages)
+    {
+        $client = new Client();
+        $parser = new Compromesso($link, $client, $pages);
+        $parser->parser();
+
     }
 }
