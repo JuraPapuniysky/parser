@@ -22,7 +22,7 @@ class Compromesso extends Site
     {
         $pagesLinks = [];
         for ($i = 1; $i <= $this->pages; $i++){
-            array_push($pagesLinks, $this->link.'/?page='.$i);
+            array_push($pagesLinks, $this->link.'?page='.$i);
         }
         return $pagesLinks;
     }
