@@ -20,4 +20,30 @@ class ToolsController extends Controller
             $i++;
         }
     }
+
+    public function actionDeleteWithOutNumber()
+    {
+        $catalogs = Catalog::findAll(['contact' => null]);
+        echo 'Found with out numbers' . count($catalogs)."\n";
+        foreach ($catalogs as $catalog){
+
+            echo $catalog->name.' '.$catalog->id." deleted\n";
+
+            $catalog->delete();
+        }
+        echo 'Done!';
+    }
+
+    public function actionShowCount()
+    {
+        echo count(Catalog::find()->all())."\n";
+    }
+
+    public function actionClear()
+    {
+        foreach (Catalog::find()->all() as $catalog){
+            $catalog->delete();
+        }
+        echo "Done\n";
+    }
 }
