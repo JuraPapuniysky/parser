@@ -3,6 +3,7 @@
 namespace app\utilities;
 
 
+use app\models\Catalog;
 use GuzzleHttp\Client;
 
 class Compromesso extends Site
@@ -32,13 +33,52 @@ class Compromesso extends Site
         foreach ($this->pagesLinks as $pagesLink){
             $currentPage = $this->getPhpQueryDoc($pagesLink);
             $organizations = $this->getOrganizations($currentPage);
-            print_r($organizations);
+            foreach ($organizations as $orgLink){
+                $this->saveOrganization($orgLink);
+            }
         }
     }
 
     public function getOrganizations(\phpQueryObject $page)
     {
         $items = $page->find('div.hotel-name');
+        $hrefs = [];
+        foreach ($items as $item) {
+            print_r($item->textContent);
+            $ipq = pq($item);
+            foreach($ipq->find('a') as $a){
+                $apq = pq($a);
+                array_push($hrefs, $apq->attr('href'));
+            }
 
+        }
+        return $hrefs;
+    }
+
+    public function saveOrganization($link)
+    {
+        $orgPage = $this->getPhpQueryDoc($link);
+        $h1s = $orgPage->find('h1');
+        $catalog = new Catalog();
+        foreach ($h1s as $h1){
+            $catalog->name = $h1->textContent;
+        }
+        $i = 0;
+        foreach ($orgPage->find('div.customer-like') as $item) {
+            $itemPq = pq($item);
+           if ($i == 0){
+               foreach ($itemPq->find('li') as $li)
+               {
+                   $catalog->address = $li->textContent;
+               }
+           } elseIf ($i == 1){
+               foreach ($itemPq->find('li') as $li)
+               {
+                   $catalog->contact = $li->textContent;
+               }
+           }
+           $catalog->save();
+        $i++;
+        }
     }
 }

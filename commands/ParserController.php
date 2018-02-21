@@ -92,7 +92,7 @@ class ParserController extends Controller
     /**
      * http://moskva.compromesso.ru/catalog/obuvnye-magaziny/
      */
-    public function actionCompromesso($link, $pages)
+    public function actionCompromesso($link = 'http://moskva.compromesso.ru/catalog/obuvnye-magaziny/', $pages = 1)
     {
         $client = new Client();
         $parser = new Compromesso($link, $client, $pages);
