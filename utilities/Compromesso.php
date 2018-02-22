@@ -11,8 +11,9 @@ class Compromesso extends Site
 
     private $pages;
     private $pagesLinks;
+    private $startPage;
 
-    public function __construct($link, Client $client, $pages)
+    public function __construct($link, Client $client,$startPage, $pages)
     {
         parent::__construct($link, $client);
         $this->pages = $pages;
@@ -22,7 +23,7 @@ class Compromesso extends Site
     public function getPages()
     {
         $pagesLinks = [];
-        for ($i = 1; $i <= $this->pages; $i++){
+        for ($i = $this->startPage; $i <= $this->pages; $i++){
             array_push($pagesLinks, $this->link.'?page='.$i);
         }
         return $pagesLinks;
