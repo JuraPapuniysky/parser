@@ -31,7 +31,7 @@ class ToolsController extends Controller
 
             $catalog->delete();
         }
-        echo 'Done!';
+        echo "Done!\n";
     }
 
     public function actionShowCount()

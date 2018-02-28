@@ -17,7 +17,9 @@ class Compromesso extends Site
     {
         parent::__construct($link, $client);
         $this->pages = $pages;
+        $this->startPage = $startPage;
         $this->pagesLinks = $this->getPages();
+
     }
 
     public function getPages()

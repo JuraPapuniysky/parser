@@ -17,6 +17,7 @@ class MoscowMapParser extends Site
 
     private $count;
     private $pageNum;
+
     public function __construct($link, Client $client, $pageNum, $count)
     {
         parent::__construct($link, $client);
